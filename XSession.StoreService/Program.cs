@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace XSession.StateService
+namespace XSession.StoreService
 {
     static class Program
     {

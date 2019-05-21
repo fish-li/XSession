@@ -1,4 +1,4 @@
-﻿namespace XSession.StateService
+﻿namespace XSession.StoreService
 {
     partial class Service1
     {

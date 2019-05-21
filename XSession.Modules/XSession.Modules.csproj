@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FD3FADDF-21DF-4326-9D58-798FB6A49F16}</ProjectGuid>
+    <ProjectGuid>{0942CD9E-A993-499E-A313-7E296F1EFCCD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>XSession.Providers</RootNamespace>
-    <AssemblyName>XSession.Providers</AssemblyName>
+    <RootNamespace>XSession.Modules</RootNamespace>
+    <AssemblyName>XSession.Modules</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

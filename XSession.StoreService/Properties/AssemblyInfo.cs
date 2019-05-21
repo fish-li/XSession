@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("XSession.Providers")]
+[assembly: AssemblyTitle("XSession.StoreService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("XSession.Providers")]
+[assembly: AssemblyProduct("XSession.StoreService")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("fd3faddf-21df-4326-9d58-798fb6a49f16")]
+[assembly: Guid("5b437797-d292-475c-a52c-8a24244e2f04")]
 
 // 程序集的版本信息由下列四个值组成: 
 //
