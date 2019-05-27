@@ -5,7 +5,11 @@ using System.Text;
 
 namespace XSession.Modules
 {
-    public class Class1
+    internal static class FileCleanTask
     {
+        public static void Start()
+        {
+
+        }
     }
 }

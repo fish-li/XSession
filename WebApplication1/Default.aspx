@@ -17,8 +17,10 @@
     </div>
 
         <div>
-            <a href="Default.aspx">Refresh</a>
+            <a href="Default.aspx">Refresh</a> &nbsp;
+            <a href="WriteSession.aspx" target="_blank">Write Session</a>
         </div>
-    </form>
+    </form>        
+
 </body>
 </html>
