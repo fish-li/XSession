@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace XSession.Modules.Test
+namespace XSession.Modules.Debug
 {
     internal sealed class FileListHandler : IHttpHandler
     {
@@ -13,7 +13,7 @@ namespace XSession.Modules.Test
 
         static FileListHandler()
         {
-            Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Test.FileListTemplate.html");
+            Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Debug.FileListTemplate.html");
             using( StreamReader reader = new StreamReader(stream, Encoding.UTF8) ) {
                 s_template = reader.ReadToEnd();
             }
@@ -28,14 +28,20 @@ namespace XSession.Modules.Test
 
             StringBuilder html = new StringBuilder();
 
-            string tempPath = FileHelper.TempPath;
+            string tempPath = Initializer.TempPath;
             DirectoryInfo dir = new DirectoryInfo(tempPath);
 
             int index = 1;
             string rowFormat2 = "<tr><td>{0}</td><td>{1}</td><td class=\"right\">{2}</td><td class=\"right\">{3}</td><td class=\"right\">{4}</td></tr>\r\n";
 
-            foreach( FileInfo f in new DirectoryInfo(tempPath).GetFiles()) {
+            foreach( string filePath in Directory.GetFiles(Initializer.TempPath, "*.dat")) {
+
+                if( File.Exists(filePath) == false )
+                    continue;
+
+                FileInfo f = new FileInfo(filePath);
                 f.Refresh();
+
                 html.AppendFormat(rowFormat2, 
                     index++,  
                     f.Name, 

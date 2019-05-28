@@ -7,12 +7,11 @@ using System.Web.UI.WebControls;
 
 namespace WebApplication1
 {
-    public partial class Default : System.Web.UI.Page
+    public partial class DeleteSession : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if( Session["usercode"] == null )
-                Session["usercode"] = "111111111111";
+            Session.Remove("usercode");
         }
     }
 }

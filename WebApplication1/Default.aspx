@@ -19,6 +19,7 @@
         <div>
             <a href="Default.aspx">Refresh</a> &nbsp;
             <a href="WriteSession.aspx" target="_blank">Write Session</a>
+            <a href="DeleteSession.aspx" target="_blank">Delete Session</a>
         </div>
     </form>        
 

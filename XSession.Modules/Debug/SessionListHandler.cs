@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace XSession.Modules.Test
+namespace XSession.Modules.Debug
 {
     internal sealed class SessionListHandler : IHttpHandler
     {
@@ -14,7 +14,7 @@ namespace XSession.Modules.Test
         {
             context.Response.ContentType = "text/plain";
 
-            if( FileHelper.IsProdEnvironment ) {
+            if( Initializer.IsProdEnvironment ) {
                 context.Response.Write("当前站点为生产环境，没有调试记录。");
                 return;
             }
@@ -22,9 +22,6 @@ namespace XSession.Modules.Test
 
             
             StringBuilder s = new StringBuilder();
-
-            s.AppendLine(FileHelper.TempPath);
-            s.AppendLine(new string('-', 60));
 
             List<DebugInfo> list = DataQueue.GetAll().OrderByDescending(x => x.Time).ToList();
 
@@ -41,6 +38,9 @@ namespace XSession.Modules.Test
 
                 s.AppendLine(new string('-', 60));
             }
+
+            if( s.Length == 0 )
+                s.AppendLine("None");
 
             context.Response.Write(s.ToString());
         }

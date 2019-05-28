@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace XSession.Modules.Test
+namespace XSession.Modules.Debug
 {
     public class DebugInfo
     {

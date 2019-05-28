@@ -11,6 +11,8 @@ namespace XSession.Modules
 {
     internal static class SessionUtils
     {
+        private static readonly bool s_compressionEnabled = true;
+
         internal static bool CheckIdLength(string id, bool throwOnFail)
         {
             if( id.Length <= 80 )
@@ -37,17 +39,10 @@ namespace XSession.Modules
 
         internal static void SerializeStoreData(SessionStateStoreData item, int initialStreamSize, out byte[] buf, out int length)
         {
-            //using( MemoryStream memoryStream = new MemoryStream(initialStreamSize) ) {
-            //    Serialize(item, memoryStream);
-            //    buf = memoryStream.GetBuffer();
-            //    length = (int)memoryStream.Length;
-            //}
-
-            bool compressionEnabled = true;
-
             using( MemoryStream memoryStream = new MemoryStream(initialStreamSize) ) {
                 Serialize(item, memoryStream);
-                if( compressionEnabled ) {
+
+                if( s_compressionEnabled ) {
                     byte[] buffer = memoryStream.GetBuffer();
                     int count = (int)memoryStream.Length;
                     memoryStream.SetLength(0L);
@@ -87,9 +82,7 @@ namespace XSession.Modules
 
         internal static SessionStateStoreData DeserializeStoreData(HttpContext context, Stream stream)
         {
-            bool compressionEnabled = true;
-
-            if( compressionEnabled ) {
+            if( s_compressionEnabled ) {
                 using( DeflateStream stream2 = new DeflateStream(stream, CompressionMode.Decompress, leaveOpen: true) ) {
                     return Deserialize(context, stream2);
                 }

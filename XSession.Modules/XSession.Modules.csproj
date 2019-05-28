@@ -42,22 +42,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheStore.cs" />
+    <Compile Include="Debug\ShowDebugHandler.cs" />
+    <Compile Include="WinLogger.cs" />
+    <Compile Include="FastSessionStateStore.cs" />
     <Compile Include="FileCleanTask.cs" />
-    <Compile Include="FileHelper.cs" />
+    <Compile Include="FileStore.cs" />
     <Compile Include="FileSessionStateStore.cs" />
     <Compile Include="HashHelper.cs" />
+    <Compile Include="Initializer.cs" />
+    <Compile Include="InProcSessionState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryFile.cs" />
-    <Compile Include="Test\DataQueue.cs" />
-    <Compile Include="Test\DebugInfo.cs" />
-    <Compile Include="Test\FileListHandler.cs" />
-    <Compile Include="Test\SessionDeleteHandler.cs" />
-    <Compile Include="Test\SessionListHandler.cs" />
-    <Compile Include="Test\SessionDetectionModule.cs" />
+    <Compile Include="Debug\DataQueue.cs" />
+    <Compile Include="Debug\DebugInfo.cs" />
+    <Compile Include="Debug\FileListHandler.cs" />
+    <Compile Include="Debug\SessionDeleteHandler.cs" />
+    <Compile Include="Debug\SessionListHandler.cs" />
+    <Compile Include="Debug\SessionDetectionModule.cs" />
     <Compile Include="SessionUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Test\FileListTemplate.html" />
+    <EmbeddedResource Include="Debug\FileListTemplate.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

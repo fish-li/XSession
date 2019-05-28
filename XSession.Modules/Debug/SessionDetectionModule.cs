@@ -8,21 +8,21 @@ using System.Reflection;
 using System.Text;
 using System.Web;
 
-namespace XSession.Modules.Test
+namespace XSession.Modules.Debug
 {
     public sealed class SessionDetectionModule : IHttpModule
     {
-        private static readonly string ItemKey = "4020dac915674b6bbb7550ab29fb3bdc";
+        private static readonly string ItemKey = "DebugInfo#4020dac915674b6bbb7550ab29fb3bdc";
 
         public void Init(HttpApplication app)
         {
-            FileHelper.Init();
+            Initializer.Init();
 
             app.BeginRequest += App_BeginRequest;
 
 
             // 生产环境不工作，避免影响性能
-            if( FileHelper.IsProdEnvironment == false ) {                
+            if( Initializer.IsProdEnvironment == false ) {                
                 app.PostRequestHandlerExecute += App_PostRequestHandlerExecute;
                 app.UpdateRequestCache += App_UpdateRequestCache;
             }
@@ -34,14 +34,17 @@ namespace XSession.Modules.Test
 
             IHttpHandler handler = null;
 
-            if( app.Request.Path.Equals("/debug/SessionList.aspx", StringComparison.OrdinalIgnoreCase) ) {
+            if( app.Request.Path.Equals("/XSession/SessionList.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new SessionListHandler();
             }
-            else if( app.Request.Path.Equals("/debug/FileList.aspx", StringComparison.OrdinalIgnoreCase) ) {
+            else if( app.Request.Path.Equals("/XSession/FileList.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new FileListHandler();
             }
-            else if( app.Request.Path.Equals("/debug/SessionDelete.aspx", StringComparison.OrdinalIgnoreCase) ) {
+            else if( app.Request.Path.Equals("/XSession/Delete.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new SessionDeleteHandler();
+            }
+            else if( app.Request.Path.Equals("/XSession/ShowDebug.aspx", StringComparison.OrdinalIgnoreCase) ) {
+                handler = new ShowDebugHandler();
             }
 
             if( handler != null ) {
@@ -70,10 +73,24 @@ namespace XSession.Modules.Test
             bool dirty = (bool)property2.GetValue(sessionItems, null);
 
 
+            CreateDebugInfo(app);
+
+
+            if( dirty == false ) {
+                // 还原状态，避免Session重新写入
+                property2.SetValue(sessionItems, false, null);
+            }
+        }
+
+
+        private void CreateDebugInfo(HttpApplication app)
+        {
+            var session = app.Context.Session;
+
             string[] names = session.Keys.Cast<string>().OrderBy(x => x).ToArray();
             List<string> items = new List<string>();
 
-            foreach(string x in names ) {
+            foreach( string x in names ) {
 
                 object value = session[x];
                 if( value == null ) {
@@ -91,23 +108,23 @@ namespace XSession.Modules.Test
                 }
 
                 if( dataType == typeof(byte[]) ) {
-                    items.Add($"{x} = {dataType.FullName}, length: {((byte[])value).Length}");
+                    items.Add($"{x} = {dataType.ToString()}, length: {((byte[])value).Length}");
                     continue;
                 }
 
                 if( value is ICollection ) {
                     ICollection collection = value as ICollection;
-                    items.Add($"{x} = {dataType.FullName}, count: {collection.Count}");
+                    items.Add($"{x} = {dataType.ToString()}, count: {collection.Count}");
                     continue;
                 }
 
                 if( value is DataTable ) {
                     DataTable table = value as DataTable;
-                    items.Add($"{x} = {dataType.FullName}, rows: {table.Rows.Count}, cols: {table.Columns.Count}");
+                    items.Add($"{x} = {dataType.ToString()}, rows: {table.Rows.Count}, cols: {table.Columns.Count}");
                     continue;
                 }
 
-                items.Add($"{x} = {dataType.FullName}");
+                items.Add($"{x} = {dataType.ToString()}");
             }
 
             DebugInfo debugInfo = new DebugInfo {
@@ -119,13 +136,7 @@ namespace XSession.Modules.Test
 
             app.Context.Items[ItemKey] = debugInfo;
 
-
-            if( dirty == false ) {
-                // 还原状态，避免Session重新写入
-                property2.SetValue(sessionItems, false, null);
-            }
         }
-
 
         private void App_UpdateRequestCache(object sender, EventArgs e)
         {
@@ -136,12 +147,16 @@ namespace XSession.Modules.Test
                 return;
 
             
-            string filePath = FileHelper.GetSessionFilePath(app.Context, debugInfo.SessionId);
+            string filePath = FileStore.GetSessionFilePath(debugInfo.SessionId);
 
-            FileInfo file = File.Exists(filePath) ? new FileInfo(filePath) : null;
-            file.Refresh();
-
-            debugInfo.Size = (file == null ? -1 : file.Length);
+            if( File.Exists(filePath) ) {
+                FileInfo file = new FileInfo(filePath);
+                file.Refresh();
+                debugInfo.Size = file.Length;
+            }
+            else {
+                debugInfo.Size =  -1 ;
+            }
             
             DataQueue.Add(debugInfo);
         }

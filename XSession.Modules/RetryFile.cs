@@ -8,7 +8,7 @@ namespace XSession.Modules
 {
     internal static class RetryFile
     {
-        public static void WriteFile(string filePath, byte[] bytes)
+        public static void Write(string filePath, byte[] bytes)
         {
             Exception exception = null;
 
@@ -27,7 +27,7 @@ namespace XSession.Modules
         }
 
 
-        public static byte[] ReadFile(string filePath)
+        public static byte[] Read(string filePath)
         {
             Exception exception = null;
 
@@ -45,7 +45,7 @@ namespace XSession.Modules
         }
 
 
-        public static void DeleteFile(string filePath)
+        public static void Delete(string filePath)
         {
             Exception exception = null;
 
