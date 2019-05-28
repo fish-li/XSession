@@ -22,7 +22,7 @@ namespace WebApplication1
                 Session["long-string" + rand.Next(100, 100000)] = new string('x', 4096);
 
             // 模拟长XML
-            Session["xml-string"] = File.ReadAllText(Path.Combine(HttpRuntime.AppDomainAppPath, @"App_Data\xx.config"), Encoding.UTF8);
+            Session["xml-string"] = File.ReadAllText(Path.Combine(HttpRuntime.AppDomainAppPath, "web.config"), Encoding.UTF8);
 
 
             // 模拟 List<string>
