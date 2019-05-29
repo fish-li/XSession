@@ -6,17 +6,31 @@ CXSession 是一个解决现有老项目中Session性能问题的工具类库。
 <p><br /><br /></p>
 
 ### Session 对性能的影响
- - 同一用户的多个并发请求导致的Session阻塞
- - Session数据的加载耗时：ASP.NET请求外部存储进程 -> 获取数据 -> TCP传输 -> 反序列化 -> 还原Session结构
+ - 一个用户的多个并发请求，在服务端以串行的方式执行，导致Session阻塞。
+ - 一个用户的Session数据视为一个整体做存储和加载，即使请求中只使用一个key/value，也会导致全部加载，更新时亦然。
+ - Session数据的加载耗时，ASP.NET请求外部进程 -> 读取Session数据 -> TCP传输 -> 反序列化 -> 还原Session结构
  - Session数据的保存耗时：Session结构序列化 -> TCP传输 -> 外部存储进程 -> 持久化 
  
-Session对性能有较大影响的就前二类场景。
+Session对性能有较大影响的就是前三类场景。
   
 <p><br /><br /><br /></p>
 
 ### Session 的使用建议
 
-如果没有特殊的原因，建议不使用 Session ！  只有好处没有坏处！
+==如果没有特殊的原因，建议不使用 Session ！==
+<p><br /></p>
+可以考虑使用 Cookie + Cache 的方式来代替。
+
+
+```
+// 例如：
+var xx = httpContext.Session["someKey"];
+
+// 等同于：
+string key = GetCookie("userId") + "someKey";
+var xx = SomeCache.Get(key);
+```
+说明：这里的Cache是指一些外部的缓存组件，诸如 Memcache, Redis 之类。
   
 <p><br /><br /><br /></p>
 
