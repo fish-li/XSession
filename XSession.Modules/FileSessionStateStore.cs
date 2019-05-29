@@ -138,10 +138,6 @@ namespace XSession.Modules
 
             byte[] bytes = SessionUtils.SerializeStoreData(item, 7000);
 
-
-            // 验证数据是否有效
-            SessionStateStoreData xx = LoadSessionState(context, id, bytes);
-
             FileStore.SaveToFile(bytes, id);
         }
 
