@@ -5,7 +5,7 @@ using System.Text;
 
 namespace XSession.Modules.Debug
 {
-    public class DebugInfo
+    internal class DebugInfo
     {
         public DateTime Time { get; set; }
 
