@@ -8,7 +8,7 @@ CXSession 是一个解决现有老项目中Session性能问题的工具类库。
 ### Session 对性能的影响
  - 一个用户的多个并发请求，在服务端以串行的方式执行，导致Session阻塞。
  - 一个用户的Session数据视为一个整体做存储和加载，即使请求中只使用一个key/value，也会导致全部加载，更新时亦然。
- - Session数据的加载耗时，ASP.NET请求外部进程 -> 读取Session数据 -> TCP传输 -> 反序列化 -> 还原Session结构
+ - Session数据的加载耗时：请求外部进程 -> 读取Session数据 -> TCP传输 -> 反序列化 -> 还原Session结构
  - Session数据的保存耗时：Session结构序列化 -> TCP传输 -> 外部存储进程 -> 持久化 
  
 Session对性能有较大影响的就是前三类场景。
@@ -17,7 +17,7 @@ Session对性能有较大影响的就是前三类场景。
 
 ### Session 的使用建议
 
-==如果没有特殊的原因，建议不使用 Session ！==
+<p><b style="color: red; font-size: 24px">如果没有特殊的原因，建议不要使用 Session !</b></p>
 <p><br /></p>
 可以考虑使用 Cookie + Cache 的方式来代替。
 
@@ -37,8 +37,8 @@ var xx = SomeCache.Get(key);
 
 ### XSession 做了什么
 XSession提供了二个 SessionStateStoreProviderBase 的实现类：
- - FileSessionStateStore: 采用文件存储Session数据的StoreProvider
- - FastSessionStateStore: 采用文件和Cache存储Session数据的StoreProvider
+ - FileSessionStateStore: 采用文件存储Session数据
+ - FastSessionStateStore: 采用文件和Cache存储Session数据
  
 FileSessionStateStore特点：
  1. 参考PHP之类的做法，将Session数据保存在文件中，避免程序重启导致Session数据丢失
@@ -48,8 +48,8 @@ FileSessionStateStore特点：
 
  FastSessionStateStore主要优化点在于：
  1. 内部包含FileSessionStateStore的所有功能，用文件做Session数据的持久化
- 2. 提升Sessio加载性能，Session数据在写入文件时，同时存放一份在Cache中，加载时优先从Cache中获取
- 2. 避免32位内存不够用时导致OOM，Cache功能仅当64位时有效
+ 2. 进一步提升Sessio加载性能：Session数据写入文件时，同时存放一份在内存中，加载时优先从内存中获取
+ 2. 避免32位内存不够用时导致OOM，“内存优先”功能仅在64位运行时时有效
  
 <p><br /><br /></p>
 
@@ -74,6 +74,7 @@ FileSessionStateStore特点：
 ```
 使用建议：
  - 可直接使用 FastSessionStateStore
+ - 如果内存不够大，可使用 FileSessionStateStore
  - SessionDetectionModule 用于提供一些诊断信息，可自行决定要不要使用。
 
 <p><br /><br /></p>
