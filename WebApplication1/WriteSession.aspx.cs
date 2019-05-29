@@ -16,10 +16,8 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Random rand = new Random(DateTime.Now.Millisecond);
             // 模拟长字符串
-            for( int i = 0; i < 3; i++ )
-                Session["long-string" + rand.Next(100, 100000)] = new string('x', 4096);
+            Session["long-string" + DateTime.Now.Millisecond] = new string('x', 4096);
 
             // 模拟长XML
             Session["xml-string"] = File.ReadAllText(Path.Combine(HttpRuntime.AppDomainAppPath, "web.config"), Encoding.UTF8);
@@ -57,7 +55,7 @@ namespace WebApplication1
             string binFile = Path.Combine(HttpRuntime.AppDomainAppPath, @"App_Data\Snipaste_2019-05-27_14-24-44.png");
             Session["ImageFile"] = File.ReadAllBytes(binFile);
 
-  
+
             // 模拟 DataSet
             string datasetXml = Path.Combine(HttpRuntime.AppDomainAppPath, @"App_Data\dataset.xml");
 
@@ -66,22 +64,6 @@ namespace WebApplication1
                 ds.ReadXml(datasetXml);
                 Session["DataTable"] = ds.Tables[0];
             }
-            //else {
-            //    string connectionString = @"server=FISHSRV2012DC\SQLEXPRESS2016;database=MyNorthwind;uid=sa;pwd=sql2016";
-            //    using( SqlConnection connection = new SqlConnection(connectionString) ) {
-            //        connection.Open();
-
-            //        SqlCommand command = new SqlCommand("select * from OrderDetails", connection);
-
-            //        SqlDataReader reader = command.ExecuteReader();
-            //        DataSet ds = new DataSet();
-            //        ds.DataSetName = "MyNorthwind";
-            //        ds.Load(reader, LoadOption.OverwriteChanges, "OrderDetails");
-
-            //        ds.WriteXml(datasetXml, XmlWriteMode.WriteSchema);
-            //        Session["DataTable"] = ds.Tables[0];
-            //    }
-            //}
 
 
         }

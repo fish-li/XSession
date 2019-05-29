@@ -11,8 +11,6 @@ namespace XSession.Modules
 {
     internal static class SessionUtils
     {
-        private static readonly bool s_compressionEnabled = true;
-
         internal static bool CheckIdLength(string id, bool throwOnFail)
         {
             if( id.Length <= 80 )
@@ -37,22 +35,11 @@ namespace XSession.Modules
         }
 
 
-        internal static void SerializeStoreData(SessionStateStoreData item, int initialStreamSize, out byte[] buf, out int length)
+        internal static byte[] SerializeStoreData(SessionStateStoreData item, int initialStreamSize)
         {
             using( MemoryStream memoryStream = new MemoryStream(initialStreamSize) ) {
                 Serialize(item, memoryStream);
-
-                if( s_compressionEnabled ) {
-                    byte[] buffer = memoryStream.GetBuffer();
-                    int count = (int)memoryStream.Length;
-                    memoryStream.SetLength(0L);
-                    using( DeflateStream deflateStream = new DeflateStream(memoryStream, CompressionMode.Compress, leaveOpen: true) ) {
-                        deflateStream.Write(buffer, 0, count);
-                    }
-                    memoryStream.WriteByte(byte.MaxValue);
-                }
-                buf = memoryStream.GetBuffer();
-                length = (int)memoryStream.Length;
+                return memoryStream.ToArray();
             }
         }
 
@@ -62,31 +49,30 @@ namespace XSession.Modules
             bool flag2 = true;
             BinaryWriter binaryWriter = new BinaryWriter(stream);
             binaryWriter.Write(item.Timeout);
+
             if( item.Items == null || item.Items.Count == 0 ) {
                 flag = false;
             }
             binaryWriter.Write(flag);
+
             if( item.StaticObjects == null || item.StaticObjects.NeverAccessed ) {
                 flag2 = false;
             }
             binaryWriter.Write(flag2);
+
             if( flag ) {
                 ((SessionStateItemCollection)item.Items).Serialize(binaryWriter);
             }
             if( flag2 ) {
                 item.StaticObjects.Serialize(binaryWriter);
             }
+
             binaryWriter.Write(byte.MaxValue);
         }
 
 
         internal static SessionStateStoreData DeserializeStoreData(HttpContext context, Stream stream)
         {
-            if( s_compressionEnabled ) {
-                using( DeflateStream stream2 = new DeflateStream(stream, CompressionMode.Decompress, leaveOpen: true) ) {
-                    return Deserialize(context, stream2);
-                }
-            }
             return Deserialize(context, stream);
         }
 

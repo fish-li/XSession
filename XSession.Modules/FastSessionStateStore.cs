@@ -56,17 +56,24 @@ namespace XSession.Modules
             lockAge = TimeSpan.Zero;
             actionFlags = SessionStateActions.None;
 
+            SessionStateStoreData data = null;
 
             // 优先从缓存中读取Session数据
             if( Initializer.Is64Bit ) {                
-                SessionStateStoreData data = _cacheStore.DoGet(context, id);
+                data = _cacheStore.DoGet(context, id);
                 if( data != null )
                     return data;
             }
 
 
-            // 从文件中读取Session数据
-            return _fileStore.DoGet(context, id);
+            // 缓存中如果不存在，有可能是AP.NET进程重启了，此时要从文件中读取Session数据
+            // 读到结果后，再存入缓存，供后续请求使用
+            data = _fileStore.DoGet(context, id);
+
+            if( data != null ) 
+                _cacheStore.InsertCache(id, data);
+            
+            return data;
         }
 
         public override void EndRequest(HttpContext context)
@@ -112,14 +119,17 @@ namespace XSession.Modules
         /// <param name="reason"></param>
         public void OnCacheItemRemoved(string key, object value, CacheItemRemovedReason reason)
         {
-            // 删除Session数据文件
-            string id = key.Substring(CacheStore.KeyPrefix.Length);
-            _fileStore.DeleteFile(id);
+            if( reason == CacheItemRemovedReason.Expired ) {
+
+                // 删除Session数据文件
+                string id = key.Substring(CacheStore.KeyPrefix.Length);
+                _fileStore.DeleteFile(id);
 
 
-            if( this._expireCallback != null ) {
-                InProcSessionState state = (InProcSessionState)value;
-                this._expireCallback(id, SessionUtils.CreateLegitStoreData(null, state.Items, state.StaticObjects, state.Timeout));
+                if( this._expireCallback != null ) {
+                    InProcSessionState state = (InProcSessionState)value;
+                    this._expireCallback(id, SessionUtils.CreateLegitStoreData(null, state.Items, state.StaticObjects, state.Timeout));
+                }
             }
         }
 
@@ -129,12 +139,11 @@ namespace XSession.Modules
 
         public override void RemoveItem(HttpContext context, string id, object lockId, SessionStateStoreData item)
         {
-            _fileStore.DeleteFile(id);
-
-
             if( Initializer.Is64Bit ) {
                 _cacheStore.RemoveItem(id);
             }
+
+            _fileStore.DeleteFile(id);            
         }
 
         public override void ResetItemTimeout(HttpContext context, string id)

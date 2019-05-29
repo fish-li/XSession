@@ -19,10 +19,16 @@ namespace XSession.Modules
             return KeyPrefix + id;
         }
 
-
         private void InsertCache(string key, InProcSessionState state)
         {
             HttpRuntime.Cache.Insert(key, state, null, Cache.NoAbsoluteExpiration, new TimeSpan(0, state.Timeout, 30), CacheItemPriority.NotRemovable, this._callback);
+        }
+
+        public void InsertCache(string id, SessionStateStoreData data)
+        {
+            InProcSessionState state = new InProcSessionState(data);
+            string key = this.GetSessionStateCacheKey(id);
+            InsertCache(key, state);
         }
 
         public void CreateUninitializedItem(string id, int timeout, SessionStateStoreData data)

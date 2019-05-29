@@ -11,6 +11,12 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Session["aaaaa"] = "aaaaaaaaaaaa";
+
+            Session.Abandon();
+
+            Session["bbbbbb"] = "bbbbbbbbbbbbbbbbb";
+
             Session.Remove("usercode");
         }
     }

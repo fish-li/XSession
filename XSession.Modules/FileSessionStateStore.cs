@@ -32,7 +32,8 @@ namespace XSession.Modules
             SessionStateStoreData data = CreateNewStoreData(context, timeout);
 
             // 将Session数据写入文件
-            SessionUtils.SerializeStoreData(data, 7000, out byte[] bytes, out int length);
+            byte[] bytes = SessionUtils.SerializeStoreData(data, 7000);
+
             FileStore.SaveToFile(bytes, id);
 
             return data;
@@ -59,6 +60,13 @@ namespace XSession.Modules
             if( bytes == null || bytes.Length == 0 )
                 return null;
 
+
+            return LoadSessionState(context, id, bytes);
+        }
+
+
+        private SessionStateStoreData LoadSessionState(HttpContext context, string id, byte[] bytes)
+        {
             using( MemoryStream memoryStream = new MemoryStream(bytes) ) {
 
                 try {
@@ -128,7 +136,11 @@ namespace XSession.Modules
         {
             SessionUtils.CheckIdLength(id, true);
 
-            SessionUtils.SerializeStoreData(item, 7000, out byte[] bytes, out int length);
+            byte[] bytes = SessionUtils.SerializeStoreData(item, 7000);
+
+
+            // 验证数据是否有效
+            SessionStateStoreData xx = LoadSessionState(context, id, bytes);
 
             FileStore.SaveToFile(bytes, id);
         }
