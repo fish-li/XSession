@@ -151,7 +151,6 @@ namespace XSession.Modules.Debug
 
             if( File.Exists(filePath) ) {
                 FileInfo file = new FileInfo(filePath);
-                file.Refresh();
                 debugInfo.Size = file.Length;
             }
             else {

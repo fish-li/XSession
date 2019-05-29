@@ -41,7 +41,6 @@ namespace XSession.Modules
             foreach(string filePath in Directory.GetFiles(Initializer.TempPath, "*.dat") ) {
 
                 FileInfo file = new FileInfo(filePath);
-                file.Refresh();
 
                 // 注意：
                 // FileSessionStateStore：每次加载Session都会更新文件的LastAccessTime

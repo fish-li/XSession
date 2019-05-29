@@ -28,29 +28,30 @@ namespace XSession.Modules.Debug
 
             StringBuilder html = new StringBuilder();
 
-            string tempPath = Initializer.TempPath;
-            DirectoryInfo dir = new DirectoryInfo(tempPath);
+            DirectoryInfo dir = new DirectoryInfo(Initializer.TempPath);
 
             int index = 1;
             string rowFormat2 = "<tr><td>{0}</td><td>{1}</td><td class=\"right\">{2}</td><td class=\"right\">{3}</td><td class=\"right\">{4}</td></tr>\r\n";
 
-            foreach( string filePath in Directory.GetFiles(Initializer.TempPath, "*.dat")) {
+            FileInfo[] files = (from x in dir.GetFiles("*.dat")
+                                  where File.Exists(x.FullName)
+                                  orderby x.LastWriteTime descending
+                                  select x).ToArray();
 
-                if( File.Exists(filePath) == false )
-                    continue;
+            foreach( FileInfo file in files ) {
+                
+                string line = string.Format(rowFormat2,
+                    index++,
+                    file.Name,
+                    file.Length.ToString("N0"),
+                    file.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"), 
+                    file.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss"));
 
-                FileInfo f = new FileInfo(filePath);
-                f.Refresh();
-
-                html.AppendFormat(rowFormat2, 
-                    index++,  
-                    f.Name, 
-                    f.Length.ToString("N0"), 
-                    f.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"), f.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                html.AppendLine(line);
             }
 
             string result = s_template
-                        .Replace("<!--{current-path}-->", tempPath)
+                        .Replace("<!--{current-path}-->", Initializer.TempPath)
                         .Replace("<!--{data-row}-->", html.ToString());
 
             context.Response.Write(result);

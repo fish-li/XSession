@@ -88,8 +88,12 @@ namespace XSession.Modules
         {
             string filePath = GetSessionFilePath(id);
 
-            if( File.Exists(filePath) ) {
-                RetryFile.Delete(filePath);
+            object lockObject = GetLock(id);
+
+            lock( lockObject ) {
+                if( File.Exists(filePath) ) {
+                    RetryFile.Delete(filePath);
+                }
             }
         }
 
