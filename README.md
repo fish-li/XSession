@@ -3,6 +3,7 @@
 
 CXSession 是一个解决现有老项目中Session性能问题的工具类库。
 
+<p><br /><br /></p>
 
 ### Session 对性能的影响
  - 同一用户的多个并发请求导致的Session阻塞
@@ -10,11 +11,14 @@ CXSession 是一个解决现有老项目中Session性能问题的工具类库。
  - Session数据的保存耗时：Session结构序列化 -> TCP传输 -> 外部存储进程 -> 持久化 
  
 Session对性能有较大影响的就前二类场景。
-
+  
+<p><br /><br /><br /></p>
 
 ### Session 的使用建议
 
 如果没有特殊的原因，建议不使用 Session ！  只有好处没有坏处！
+  
+<p><br /><br /><br /></p>
 
 
 ### XSession 做了什么
@@ -33,6 +37,7 @@ FileSessionStateStore特点：
  2. 提升Sessio加载性能，Session数据在写入文件时，同时存放一份在Cache中，加载时优先从Cache中获取
  2. 避免32位内存不够用时导致OOM，Cache功能仅当64位时有效
  
+<p><br /><br /></p>
 
 ### XSession 使用方法
 在 web.config 中配置 customProvider
@@ -57,6 +62,7 @@ FileSessionStateStore特点：
  - 可直接使用 FastSessionStateStore
  - SessionDetectionModule 用于提供一些诊断信息，可自行决定要不要使用。
 
+<p><br /><br /></p>
  
 ### 源代码项目说明
  - SessionCodeAnalysis：代码分析工具，扫描Session的使用方法
