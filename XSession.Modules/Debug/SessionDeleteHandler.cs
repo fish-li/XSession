@@ -24,6 +24,11 @@ namespace XSession.Modules.Debug
 
 
             if( name == "ALL" ) {
+
+                if( Initializer.IsProdEnvironment ) {
+                    context.Response.Write("ignore!");
+                }
+
                 StringBuilder s = new StringBuilder();
                 s.AppendLine("Delete files:")
                     .AppendLine(new string('-', 60));
