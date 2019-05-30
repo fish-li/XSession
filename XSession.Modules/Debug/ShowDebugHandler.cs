@@ -16,12 +16,16 @@ namespace XSession.Modules.Debug
 
             StringBuilder s = new StringBuilder();
             s.AppendLine($"AppPath: {HttpRuntime.AppDomainAppPath}");
-
             s.AppendLine($"TempPath: {Initializer.TempPath}");
+            s.AppendLine("------------------------------------------------------");
             s.AppendLine($"IsProd: {Initializer.IsProdEnvironment}");
             s.AppendLine($"Is64Bit: {Initializer.Is64Bit}");
+            s.AppendLine("------------------------------------------------------");
             s.AppendLine($"CustomProvider: {Initializer.SessionConfig.CustomProvider}");
             s.AppendLine($"Timeout: {Initializer.SessionConfig.Timeout}");
+            s.AppendLine("------------------------------------------------------");
+            s.AppendLine($"Cache.Count: {HttpRuntime.Cache.Count}");
+            s.AppendLine($"EffectiveMemory(MB): {(long)(HttpRuntime.Cache.EffectivePrivateBytesLimit /1024.0/1024.0)}");
 
             context.Response.Write(s.ToString());
         }

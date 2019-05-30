@@ -14,9 +14,9 @@ namespace XSession.Modules
 
         private CacheItemRemovedCallback _callback;
   
-        private string GetSessionStateCacheKey(string id)
+        private string GetSessionStateCacheKey(string sessionId)
         {
-            return KeyPrefix + id;
+            return KeyPrefix + sessionId;
         }
 
         private void InsertCache(string key, InProcSessionState state)

@@ -40,12 +40,15 @@ namespace XSession.Modules
 
             foreach(string filePath in Directory.GetFiles(Initializer.TempPath, "*.dat") ) {
 
+                if( File.Exists(filePath) == false )
+                    continue;
+
                 FileInfo file = new FileInfo(filePath);
 
                 // 注意：
                 // FileSessionStateStore：每次加载Session都会更新文件的LastAccessTime
 
-                // FastSessionStateStore：加载Session数据时不会更新文件的LastAccessTime，只会在Session修改后写入文件，造成LastWriteTime被更新
+                // FastSessionStateStore：加载Session数据时不会更新文件的LastAccessTime，只会在Session修改后写入文件（更新LastWriteTime）
                 // 如果Session过期，会产缓存过期事件，主动删除Session数据文件，所以这里为了保险起见，只删除2天前没有更新的文件。
 
                 bool delete = flag
@@ -55,6 +58,10 @@ namespace XSession.Modules
                 if( delete ) {
                     s.AppendLine(filePath);
                     RetryFile.Delete(filePath);
+
+                    // 删除内存中的用户锁对象，以免内存泄露
+                    string sessionId = FileStore.GetSessionId(filePath);
+                    UserLock.Remove(sessionId);
                 }
             }
 

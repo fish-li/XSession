@@ -143,7 +143,7 @@ namespace XSession.Modules
                 _cacheStore.RemoveItem(id);
             }
 
-            _fileStore.DeleteFile(id);            
+            _fileStore.DeleteFile(id);
         }
 
         public override void ResetItemTimeout(HttpContext context, string id)

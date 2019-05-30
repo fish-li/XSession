@@ -12,14 +12,14 @@ namespace XSession.Modules
         {
             Exception exception = null;
 
-            for( int i = 0; i < 5; i++ ) {
+            for( int i = 0; i < 10; i++ ) {
                 try {
                     File.WriteAllBytes(filePath, bytes);
                     return;
                 }
                 catch( IOException ex ) {  // 这类异常要重试
                     exception = ex;
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(300);
                 }
             }
 
@@ -31,13 +31,13 @@ namespace XSession.Modules
         {
             Exception exception = null;
 
-            for( int i = 0; i < 5; i++ ) {
+            for( int i = 0; i < 10; i++ ) {
                 try {
                     return File.ReadAllBytes(filePath);
                 }
                 catch( IOException ex ) {  // 这类异常要重试
                     exception = ex;
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(300);
                 }
             }
 
@@ -49,14 +49,14 @@ namespace XSession.Modules
         {
             Exception exception = null;
 
-            for( int i = 0; i < 5; i++ ) {
+            for( int i = 0; i < 10; i++ ) {
                 try {
                     File.Delete(filePath);
                     return;
                 }
                 catch( IOException ex ) {  // 这类异常要重试
                     exception = ex;
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(300);
                 }
             }
 

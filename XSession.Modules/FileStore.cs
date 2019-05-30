@@ -11,53 +11,25 @@ namespace XSession.Modules
 {
     internal static class FileStore
     {
-        private static readonly object s_lock = new object();
-        private static Hashtable s_hashtable = new Hashtable(5300);
-
-        
-        private static object GetLock(string key)
+        public static string GetSessionFilePath(string sessionId)
         {
-            object value = s_hashtable[key];
-
-            if( value == null ) {
-
-                // 只允许一个线程写入
-                lock( s_lock ) {
-
-                    // 检查【前面】是否有线程已经插入
-                    value = s_hashtable[key];
-
-                    // 确实没有插入，这里执行插入
-                    if( value == null ) {
-                        value = new object();
-                        s_hashtable[key] = value;
-                    }
-                }
-            }
-
-            return value;
-        }
-
-        public static string GetSessionFilePath(string id)
-        {
-            string filename = id + ".dat";
+            string filename = sessionId + ".dat";
             return Path.Combine(Initializer.TempPath, filename);
         }
 
+        public static string GetSessionId(string sessionFilePath)
+        {
+            return Path.GetFileNameWithoutExtension(sessionFilePath);
+        }
 
-        public static void SaveToFile(byte[] bytes,  string id)
+        public static void SaveToFile(byte[] bytes,  string sessionId)
         {
             if( bytes == null )
                 return;
 
-            //if( s_isProdEnvironment == false ) {
-            //    if( bytes.Length > 4 * 1024 * 1024 )
-            //        throw new InvalidOperationException($"Session数据量过大，当前已达到 {bytes.Length}");
-            //}
+            string filePath = GetSessionFilePath(sessionId);
 
-            string filePath = GetSessionFilePath(id);
-
-            object lockObject = GetLock(id);
+            object lockObject = UserLock.XInstance.GetLock(sessionId);
 
             lock( lockObject ) {
                 RetryFile.Write(filePath, bytes);
@@ -66,11 +38,11 @@ namespace XSession.Modules
         }
 
 
-        public static byte[] ReadFile(string id)
+        public static byte[] ReadFile(string sessionId)
         {
-            string filePath = GetSessionFilePath(id);
+            string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = GetLock(id);
+            object lockObject = UserLock.XInstance.GetLock(sessionId);
 
             lock( lockObject ) {
                 if( File.Exists(filePath) ) {
@@ -84,17 +56,19 @@ namespace XSession.Modules
             }
         }
 
-        public static void DeleteFile(string id)
+        public static void DeleteFile(string sessionId)
         {
-            string filePath = GetSessionFilePath(id);
+            string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = GetLock(id);
+            object lockObject = UserLock.XInstance.GetLock(sessionId);
 
             lock( lockObject ) {
                 if( File.Exists(filePath) ) {
                     RetryFile.Delete(filePath);
                 }
             }
+            
+            UserLock.Remove(sessionId);
         }
 
 
