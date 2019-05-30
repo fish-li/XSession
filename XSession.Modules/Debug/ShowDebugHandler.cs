@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -14,7 +15,15 @@ namespace XSession.Modules.Debug
         {
             context.Response.ContentType = "text/plain";
 
+            string dllPath = typeof(ShowDebugHandler).Assembly.Location;
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(dllPath);
+
+
             StringBuilder s = new StringBuilder();
+
+            s.AppendLine($"Version: {versionInfo.FileVersion}");
+            s.AppendLine("------------------------------------------------------");
+
             s.AppendLine($"AppPath: {HttpRuntime.AppDomainAppPath}");
             s.AppendLine($"TempPath: {Initializer.TempPath}");
             s.AppendLine("------------------------------------------------------");

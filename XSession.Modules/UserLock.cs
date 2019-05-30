@@ -26,25 +26,6 @@ namespace XSession.Modules
         private UserLock() { }
 
 
-        private void SampleCode()
-        {
-            // 获取当前用户的SessionId 。  注意：请确保当前请求的Session对象不为NULL
-            string sessionId = System.Web.HttpContext.Current.Session.SessionID;
-
-            // 获取当前用户关联的锁对象。
-            object lockObject = UserLock.Instance.GetLock(sessionId);
-
-            lock( lockObject ) {
-
-                // 写文件
-                System.IO.File.WriteAllText(@"c:\aa\bb\cc.txt", "xxxxxxxxxxxxx", Encoding.UTF8);
-
-                // 读文件
-                string text = System.IO.File.ReadAllText(@"c:\aa\bb\cc.txt", Encoding.UTF8);
-            }
-        }
-
-
         /// <summary>
         /// 根据SessionId获取用户的独占锁。
         /// 获取到锁对象后，配合 lock( .... ) 来使用
