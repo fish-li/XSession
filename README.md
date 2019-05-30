@@ -7,11 +7,12 @@ CXSession 是一个解决现有老项目中Session性能问题的工具类库。
 
 ### Session 对性能的影响
  - 一个用户的多个并发请求，在服务端以串行的方式执行，导致Session阻塞。
- - 一个用户的Session数据视为一个整体做存储和加载，即使请求中只使用一个key/value，也会导致全部加载，更新时亦然。
  - Session数据的加载耗时：请求外部进程 -> 读取Session数据 -> TCP传输 -> 反序列化 -> 还原Session结构
  - Session数据的保存耗时：Session结构序列化 -> TCP传输 -> 外部存储进程 -> 持久化 
  
-Session对性能有较大影响的就是前三类场景。
+Session对性能有较大影响的就是前二类场景。
+<br /><br />
+此外，一个用户的Session数据视为一个整体做存储和加载，即使请求中只使用一个key/value，也会导致全部加载，更新时亦然。当Session数据中存放“大对象”时将会影响性能。
   
 <p><br /><br /><br /></p>
 
@@ -36,14 +37,14 @@ var xx = SomeCache.Get(key);
 
 
 ### XSession 做了什么
-XSession提供了二个 SessionStateStoreProviderBase 的实现类：
+XSession提供了二个 “Session存储” 的实现类：
  - FileSessionStateStore: 采用文件存储Session数据
  - FastSessionStateStore: 采用文件和Cache存储Session数据
  
 FileSessionStateStore特点：
  1. 参考PHP之类的做法，将Session数据保存在文件中，避免程序重启导致Session数据丢失
  2. 使用文件存储可以减少网络调用开销，提升性能。
- 3. 注意事项：需要在负载均衡上设置【用户会话关联】
+ 3. 注意事项：需要在负载均衡上设置【<b>用户会话关联</b>】
 
 
  FastSessionStateStore主要优化点在于：
