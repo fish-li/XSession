@@ -27,8 +27,6 @@ namespace XSession.Modules
 
         internal SessionStateStoreData CreateUninitializedItem2(HttpContext context, string id, int timeout)
         {
-            SessionUtils.CheckIdLength(id, true);
-
             SessionStateStoreData data = CreateNewStoreData(context, timeout);
 
             // 将Session数据写入文件
@@ -88,13 +86,11 @@ namespace XSession.Modules
 
         public override SessionStateStoreData GetItem(HttpContext context, string id, out bool locked, out TimeSpan lockAge, out object lockId, out SessionStateActions actionFlags)
         {
-            SessionUtils.CheckIdLength(id, true);
             return this.DoGet(context, id, false, out locked, out lockAge, out lockId, out actionFlags);
         }
 
         public override SessionStateStoreData GetItemExclusive(HttpContext context, string id, out bool locked, out TimeSpan lockAge, out object lockId, out SessionStateActions actionFlags)
         {
-            SessionUtils.CheckIdLength(id, true);
             return this.DoGet(context, id, true, out locked, out lockAge, out lockId, out actionFlags);
         }
 
@@ -124,7 +120,6 @@ namespace XSession.Modules
 
         internal void DeleteFile(string id)
         {
-            SessionUtils.CheckIdLength(id, true);
             FileStore.DeleteFile(id);
         }
 
@@ -134,8 +129,6 @@ namespace XSession.Modules
 
         public override void SetAndReleaseItemExclusive(HttpContext context, string id, SessionStateStoreData item, object lockId, bool newItem)
         {
-            SessionUtils.CheckIdLength(id, true);
-
             byte[] bytes = SessionUtils.SerializeStoreData(item, 7000);
 
             FileStore.SaveToFile(bytes, id);

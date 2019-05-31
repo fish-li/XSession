@@ -68,7 +68,7 @@ namespace XSession.Modules
                 }
             }
             
-            UserLock.Remove(sessionId);
+            UserLock.XInstance.RemoveLock(sessionId);
         }
 
 

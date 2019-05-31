@@ -27,18 +27,18 @@ namespace XSession.Modules
 
 
         /// <summary>
-        /// 根据SessionId获取用户的独占锁。
+        /// 根据 Id 获取用户的独占锁。
         /// 获取到锁对象后，配合 lock( .... ) 来使用
         /// </summary>
-        /// <param name="sessionId"></param>
+        /// <param name="sid"></param>
         /// <returns></returns>
-        public object GetLock(string sessionId)
+        public object GetLock(string sid)
         {
-            if( string.IsNullOrEmpty(sessionId) )
-                throw new ArgumentNullException(nameof(sessionId));
+            if( string.IsNullOrEmpty(sid) )
+                throw new ArgumentNullException(nameof(sid));
 
 
-            object value = _hashtable[sessionId];
+            object value = _hashtable[sid];
 
             if( value == null ) {
 
@@ -46,12 +46,12 @@ namespace XSession.Modules
                 lock( _lock ) {
 
                     // 检查【前面】是否有线程已经插入
-                    value = _hashtable[sessionId];
+                    value = _hashtable[sid];
 
                     // 确实没有插入，这里执行插入
                     if( value == null ) {
                         value = new object();
-                        _hashtable[sessionId] = value;
+                        _hashtable[sid] = value;
                     }
                 }
             }
@@ -61,24 +61,16 @@ namespace XSession.Modules
 
 
         /// <summary>
-        /// 删除锁对象，仅当用户Session删除时调用。
+        /// 删除锁对象
         /// </summary>
-        /// <param name="sessionId"></param>
-        private void RemoveLock(string sessionId)
+        /// <param name="sid"></param>
+        public void RemoveLock(string sid)
         {
             lock( _lock ) {
-                _hashtable.Remove(sessionId);
+                _hashtable.Remove(sid);
             }
         }
 
 
-        internal static void Remove(string sessionId)
-        {
-            if( string.IsNullOrEmpty(sessionId) )
-                return;
-
-            XInstance.RemoveLock(sessionId);
-            Instance.RemoveLock(sessionId);
-        }
     }
 }

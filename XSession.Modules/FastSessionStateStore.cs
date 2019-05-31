@@ -82,13 +82,11 @@ namespace XSession.Modules
 
         public override SessionStateStoreData GetItem(HttpContext context, string id, out bool locked, out TimeSpan lockAge, out object lockId, out SessionStateActions actionFlags)
         {
-            SessionUtils.CheckIdLength(id, true);
             return this.DoGet(context, id, false, out locked, out lockAge, out lockId, out actionFlags);
         }
 
         public override SessionStateStoreData GetItemExclusive(HttpContext context, string id, out bool locked, out TimeSpan lockAge, out object lockId, out SessionStateActions actionFlags)
         {
-            SessionUtils.CheckIdLength(id, true);
             return this.DoGet(context, id, true, out locked, out lockAge, out lockId, out actionFlags);
         }
 

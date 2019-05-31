@@ -11,18 +11,6 @@ namespace XSession.Modules
 {
     internal static class SessionUtils
     {
-        internal static bool CheckIdLength(string id, bool throwOnFail)
-        {
-            if( id.Length <= 80 )
-                return true;
-
-            if( throwOnFail )
-                throw new HttpException(string.Format("SessionID too long: {0}", id));
-
-            return false;
-        }
-
-
         internal static SessionStateStoreData CreateLegitStoreData(HttpContext context, ISessionStateItemCollection sessionItems, HttpStaticObjectsCollection staticObjects, int timeout)
         {
             if( sessionItems == null ) {

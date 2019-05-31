@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="CacheStore.cs" />
     <Compile Include="Debug\ShowDebugHandler.cs" />
-    <Compile Include="DemoCode.cs" />
+    <Compile Include="DEMO\UserLockDemo.cs" />
     <Compile Include="UserLock.cs" />
     <Compile Include="WinLogger.cs" />
     <Compile Include="FastSessionStateStore.cs" />
