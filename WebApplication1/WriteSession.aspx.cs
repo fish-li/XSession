@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.UI;
@@ -22,6 +23,16 @@ namespace WebApplication1
             // 模拟长XML
             Session["xml-string"] = File.ReadAllText(Path.Combine(HttpRuntime.AppDomainAppPath, "web.config"), Encoding.UTF8);
 
+
+            Session["DateTime1"] = DateTime.Now;
+            Session["Guid1"] = Guid.NewGuid();
+            Session["long1"] = 252425234L;
+            Session["int2"] = 235;
+            Session["unit3"] = 423U;
+            Session["bool1"] = true;
+
+            Session["IntArray"] = new int[] { 1, 2, 3, 4, 5 };
+            Session["StringArray"] = new string[] { "aaa", "bbb", "ccc" };
 
             // 模拟 List<string>
             List<string> list = new List<string>();
@@ -41,6 +52,13 @@ namespace WebApplication1
                 collection.Add(key, value);
             }
             Session["NameValueCollection"] = collection;
+
+
+            CookieContainer cookieContainer = new CookieContainer();
+            cookieContainer.Add(new Uri("http://www.abc.com/"), new Cookie("c1", "aaaaaaaaaaaaaa"));
+            cookieContainer.Add(new Uri("http://www.abc.com/"), new Cookie("c2", "bbbbbbbbbbbbbb"));
+            cookieContainer.Add(new Uri("http://www.abc.com/"), new Cookie("c3", "cccccccccccccc"));
+            Session["CookieContainer"] = cookieContainer;
 
 
             // 模拟 Dictionary
@@ -63,6 +81,7 @@ namespace WebApplication1
                 DataSet ds = new DataSet();
                 ds.ReadXml(datasetXml);
                 Session["DataTable"] = ds.Tables[0];
+                Session["DataSet"] = ds;
             }
 
 

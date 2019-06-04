@@ -118,6 +118,10 @@ namespace XSession.Modules.Debug
                     }
                 }
 
+                if( dataType.IsPrimitive || dataType == typeof(DateTime) || dataType == typeof(Guid) ) {
+                    items.Add($"{x} = {value.ToString()},  ({dataType.ToString()})");
+                    continue;
+                }
 
                 if( dataType == typeof(byte[]) ) {
                     items.Add($"{x} = {dataType.ToString()}, length: {((byte[])value).Length}");
