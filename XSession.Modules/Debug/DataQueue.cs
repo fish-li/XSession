@@ -7,9 +7,9 @@ namespace XSession.Modules.Debug
 {
     internal static class DataQueue
     {
-        private static readonly int MaxCount = 100;
+        private static readonly int MaxCount = 300;
         private static readonly object s_lock = new object();
-        private static Queue<DebugInfo> s_queue = new Queue<DebugInfo>(200);
+        private static Queue<DebugInfo> s_queue = new Queue<DebugInfo>(300);
 
         public static void Add(DebugInfo debugInfo)
         {

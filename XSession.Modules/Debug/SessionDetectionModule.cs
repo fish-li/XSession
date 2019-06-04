@@ -14,6 +14,10 @@ namespace XSession.Modules.Debug
     {
         private static readonly string ItemKey = "DebugInfo#4020dac915674b6bbb7550ab29fb3bdc";
 
+        private static readonly object s_lock = new object();
+        internal static Hashtable SessionDataTypes = new Hashtable(256);
+
+
         public void Init(HttpApplication app)
         {
             Initializer.Init();
@@ -106,6 +110,14 @@ namespace XSession.Modules.Debug
                     items.Add($"{x} = {display} , ({text.Length})");
                     continue;
                 }
+
+                // 记录包含了哪些数据类型
+                if( SessionDataTypes.ContainsKey(dataType) == false ) {
+                    lock( s_lock ) {
+                        SessionDataTypes[dataType] = "xx";
+                    }
+                }
+
 
                 if( dataType == typeof(byte[]) ) {
                     items.Add($"{x} = {dataType.ToString()}, length: {((byte[])value).Length}");

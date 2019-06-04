@@ -35,6 +35,11 @@ namespace XSession.Modules.Debug
             s.AppendLine("------------------------------------------------------");
             s.AppendLine($"Cache.Count: {HttpRuntime.Cache.Count}");
             s.AppendLine($"EffectiveMemory(MB): {(long)(HttpRuntime.Cache.EffectivePrivateBytesLimit /1024.0/1024.0)}");
+            s.AppendLine("------------------------------------------------------");
+            s.AppendLine("Session DataTypes:");
+            s.AppendLine("  string");
+            foreach(var key in SessionDetectionModule.SessionDataTypes.Keys)
+                s.AppendLine("  " + key.ToString());
 
             context.Response.Write(s.ToString());
         }
