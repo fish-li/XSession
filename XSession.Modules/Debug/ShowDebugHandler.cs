@@ -28,17 +28,20 @@ namespace XSession.Modules.Debug
             s.AppendLine($"TempPath: {Initializer.TempPath}");
             s.AppendLine("------------------------------------------------------");
             s.AppendLine($"IsProd: {Initializer.IsProdEnvironment}");
-            s.AppendLine($"Is64Bit: {Initializer.Is64Bit}");
+            s.AppendLine($"Is64Bit: {Initializer.Is64Bit}");            
             s.AppendLine("------------------------------------------------------");
             s.AppendLine($"CustomProvider: {Initializer.SessionConfig.CustomProvider}");
             s.AppendLine($"Timeout: {Initializer.SessionConfig.Timeout}");
             s.AppendLine("------------------------------------------------------");
             s.AppendLine($"Cache.Count: {HttpRuntime.Cache.Count}");
             s.AppendLine($"EffectiveMemory(MB): {(long)(HttpRuntime.Cache.EffectivePrivateBytesLimit /1024.0/1024.0)}");
+            s.AppendLine("------------------------------------------------------");            
+            s.AppendLine($"ErrorDataCount: {System.Threading.Interlocked.Read(ref SessionDataUtils.DeleteErrorDataCount)}");
             s.AppendLine("------------------------------------------------------");
+
             s.AppendLine("Session DataTypes:");
             s.AppendLine("  string");
-            foreach(var key in SessionDetectionModule.SessionDataTypes.Keys)
+            foreach(var key in SessionDataUtils.SessionDataTypes.Keys)
                 s.AppendLine("  " + key.ToString());
 
             context.Response.Write(s.ToString());

@@ -46,6 +46,7 @@ TestResults
 Log111
 bin
 dll_release
+_tmp
 
 .apdisk
 *.pdb

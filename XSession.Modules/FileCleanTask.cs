@@ -8,7 +8,6 @@ namespace XSession.Modules
 {
     internal static class FileCleanTask
     {
-
         public static void Start()
         {
             while( true ) {
@@ -32,9 +31,7 @@ namespace XSession.Modules
         private static void Execute()
         {
             DateTime now = DateTime.Now;
-            int timeout = Initializer.SessionConfig.Timeout.Minutes + 5; // 多加 5 分钟
-
-            bool flag = Initializer.SessionConfig.CustomProvider == "FastSessionStateStore" && Initializer.Is64Bit;
+            TimeSpan timeout = Initializer.SessionConfig.Timeout.Add(TimeSpan.FromMinutes(5)); // 多加 5 分钟
 
             StringBuilder s = new StringBuilder();
 
@@ -45,15 +42,7 @@ namespace XSession.Modules
 
                 FileInfo file = new FileInfo(filePath);
 
-                // 注意：
-                // FileSessionStateStore：每次加载Session都会更新文件的LastAccessTime
-
-                // FastSessionStateStore：加载Session数据时不会更新文件的LastAccessTime，只会在Session修改后写入文件（更新LastWriteTime）
-                // 如果Session过期，会产缓存过期事件，主动删除Session数据文件，所以这里为了保险起见，只删除2天前没有更新的文件。
-
-                bool delete = flag
-                                ? (file.LastWriteTime.AddDays(2) < now)
-                                : (file.LastAccessTime.AddMinutes(timeout) < now);
+                bool delete = file.LastAccessTime.Add(timeout) < now;
 
                 if( delete ) {
                     s.AppendLine(filePath);

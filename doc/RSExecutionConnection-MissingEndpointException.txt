@@ -1,0 +1,58 @@
+﻿System.Reflection.TargetInvocationException: 调用的目标发生了异常。 
+---> Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection+MissingEndpointException: 尝试连接到报表服务器失败。请检查您的连接信息，确保报表服务器采用的是兼容版本。 
+---> System.InvalidOperationException: 客户端发现响应内容类型为“text/html; charset=utf-8”，但应为“text/xml”。
+请求失败，错误信息为:
+--
+<html>
+	<head>
+		<title>
+			SQL Server Reporting Services
+		</title><meta name="Generator" content="Microsoft SQL Server Reporting Services 10.0.1600.22" />
+<meta name="HTTP Status" content="500" />
+<meta name="ProductLocaleID" content="127" />
+<meta name="CountryLocaleID" content="2052" />
+<style>
+			BODY {FONT-FAMILY:Verdana; FONT-WEIGHT:normal; FONT-SIZE: 8pt; COLOR:black}
+			H1 {FONT-FAMILY:Verdana; FONT-WEIGHT:700; FONT-SIZE:15pt}
+			LI {FONT-FAMILY:Verdana; FONT-WEIGHT:normal; FONT-SIZE:8pt; DISPLAY:inline}
+			.ProductInfo {FONT-FAMILY:Verdana; FONT-WEIGHT:bold; FONT-SIZE: 8pt; COLOR:gray}
+			A:link {FONT-SIZE: 8pt; FONT-FAMILY:Verdana; COLOR:#3366CC; TEXT-DECORATION:none}
+			A:hover {FONT-SIZE: 8pt; FONT-FAMILY:Verdana; COLOR:#FF3300; TEXT-DECORATION:underline}
+			A:visited {FONT-SIZE: 8pt; FONT-FAMILY:Verdana; COLOR:#3366CC; TEXT-DECORATION:none}
+			A:visited:hover {FONT-SIZE: 8pt; FONT-FAMILY:Verdana; color:#FF3300; TEXT-DECORATION:underline}
+
+		</style>
+	</head><body bgcolor="white">
+		<h1>
+			Reporting Services 错误<hr width="100%" size="1" color="silver" />
+		</h1><ul>
+			<li>身份验证扩展插件出现异常，或者返回了无效的值: identity==null。 (rsAuthenticationExtensionError) <a href="http://go.microsoft.com/fwlink/?LinkId=20476&EvtSrc=Microsoft.ReportingServices.Diagnostics.Utilities.ErrorStrings&EvtID=rsAuthenticationExtensionError&ProdName=Microsoft%20SQL%20Server%20Reporting%20Services&ProdVer=10.0.1600.22" target="_blank">获取联机帮助</a></li>
+		</ul><hr width="100%" size="1" color="silver" /><span class="ProductInfo">SQL Server Reporting Services</span>
+	</body>
+</html>
+--.
+   在 Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection.GetSecureMethods()
+   在 Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection.IsSecureMethod(String methodname)
+   在 Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection.SetConnectionSSLForMethod(String methodname)
+   在 Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection.ProxyMethodInvocation.Execute[TReturn](RSExecutionConnection connection, ProxyMethod`1 initialMethod, ProxyMethod`1 retryMethod)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 Microsoft.Reporting.WebForms.Internal.Soap.ReportingServices2005.Execution.RSExecutionConnection.ProxyMethodInvocation.Execute[TReturn](RSExecutionConnection connection, ProxyMethod`1 initialMethod, ProxyMethod`1 retryMethod)
+   在 Microsoft.Reporting.WebForms.ServerReport.EnsureExecutionSession()
+   在 Microsoft.Reporting.WebForms.ServerReport.LoadViewState(Object viewStateObj)
+   在 Microsoft.Reporting.WebForms.ServerReport..ctor(SerializationInfo info, StreamingContext context)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.RuntimeMethodHandle._SerializationInvoke(Object target, SignatureStruct& declaringTypeSig, SerializationInfo info, StreamingContext context)
+   在 System.Runtime.Serialization.ObjectManager.CompleteISerializableObject(Object obj, SerializationInfo info, StreamingContext context)
+   在 System.Runtime.Serialization.ObjectManager.FixupSpecialObject(ObjectHolder holder)
+   在 System.Runtime.Serialization.ObjectManager.DoFixups()
+   在 System.Runtime.Serialization.Formatters.Binary.ObjectReader.Deserialize(HeaderHandler handler, __BinaryParser serParser, Boolean fCheck, Boolean isCrossAppDomain, IMethodCallMessage methodCallMessage)
+   在 System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Deserialize(Stream serializationStream, HeaderHandler handler, Boolean fCheck, Boolean isCrossAppDomain, IMethodCallMessage methodCallMessage)
+   在 System.Web.Util.AltSerialization.ReadValueFromStream(BinaryReader reader)
+   在 System.Web.SessionState.SessionStateItemCollection.ReadValueFromStreamWithAssert()
+   在 System.Web.SessionState.SessionStateItemCollection.DeserializeItem(String name, Boolean check)
+   在 System.Web.SessionState.SessionStateItemCollection.DeserializeAllItems()
+   在 System.Web.SessionState.SessionStateItemCollection.get_Keys()
+   在 System.Web.SessionState.HttpSessionStateContainer.get_Keys()
+   在 System.Web.SessionState.HttpSessionState.get_Keys()
+   在 XSession.Modules.Debug.DebugInfoHelper.GeteSessionItems(HttpSessionState session) 位置 D:\my-github\XSession\XSession.Modules\Debug\DebugInfoHelper.cs:行号 36
+   在 XSession.Modules.Debug.SessionDetailHandler.ProcessRequest(HttpContext context) 位置 D:\my-github\XSession\XSession.Modules\Debug\SessionDetailHandler.cs:行号 35

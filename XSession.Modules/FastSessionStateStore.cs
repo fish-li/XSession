@@ -61,14 +61,19 @@ namespace XSession.Modules
             // 优先从缓存中读取Session数据
             if( Initializer.Is64Bit ) {                
                 data = _cacheStore.DoGet(context, id);
-                if( data != null )
+                if( data != null ) {
+
+                    // 即使缓存中存在Session数据，也要更新Session数据文件的【最后访问时间】，供后面文件加载时判断是否过期
+                    FileStore.SetLastAccessTime(id, DateTime.Now);
+
                     return data;
+                }
             }
 
 
             // 缓存中如果不存在，有可能是AP.NET进程重启了，此时要从文件中读取Session数据
             // 读到结果后，再存入缓存，供后续请求使用
-            data = _fileStore.DoGet(context, id);
+            data = _fileStore.DoGet(context, id, true);
 
             if( data != null ) 
                 _cacheStore.InsertCache(id, data);

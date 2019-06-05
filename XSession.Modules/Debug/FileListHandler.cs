@@ -39,10 +39,11 @@ namespace XSession.Modules.Debug
                                   select x).ToArray();
 
             foreach( FileInfo file in files ) {
-                
+
+                string link = $"<a href='/XSession/Detail.aspx?sid={Path.GetFileNameWithoutExtension(file.FullName)}' target='blank'>{file.Name}</a>";
                 string line = string.Format(rowFormat2,
                     index++,
-                    file.Name,
+                    link,
                     file.Length.ToString("N0"),
                     file.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss"), 
                     file.LastAccessTime.ToString("yyyy-MM-dd HH:mm:ss"));

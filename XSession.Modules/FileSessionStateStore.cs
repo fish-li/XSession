@@ -48,13 +48,13 @@ namespace XSession.Modules
             lockId = null;
             lockAge = TimeSpan.Zero;
             actionFlags = SessionStateActions.None;
-            return DoGet(context, id);
+            return DoGet(context, id, true);
         }
         
 
-        internal SessionStateStoreData DoGet(HttpContext context, string id)
+        internal SessionStateStoreData DoGet(HttpContext context, string id, bool checkTimeout)
         {
-            byte[] bytes = FileStore.ReadFile(id);
+            byte[] bytes = FileStore.ReadFile(id, checkTimeout);
             if( bytes == null || bytes.Length == 0 )
                 return null;
 

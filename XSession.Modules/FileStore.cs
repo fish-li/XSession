@@ -38,7 +38,7 @@ namespace XSession.Modules
         }
 
 
-        public static byte[] ReadFile(string sessionId)
+        public static byte[] ReadFile(string sessionId, bool checkTimeout)
         {
             string filePath = GetSessionFilePath(sessionId);
 
@@ -46,8 +46,19 @@ namespace XSession.Modules
 
             lock( lockObject ) {
                 if( File.Exists(filePath) ) {
+                    DateTime now = DateTime.Now;
+
+                    if( checkTimeout ) {
+                        // 从文件加载时，检查数据是否已过期                        
+                        DateTime time = File.GetLastAccessTime(filePath);
+
+                        // Session数据已过期
+                        if( time.Add(Initializer.SessionConfig.Timeout) < now )
+                            return null;
+                    }
+                    
                     byte[] bytes = RetryFile.Read(filePath);
-                    File.SetLastAccessTime(filePath, DateTime.Now);
+                    File.SetLastAccessTime(filePath, now);
 
                     return bytes;
                 }
@@ -73,6 +84,16 @@ namespace XSession.Modules
 
 
 
+        public static void SetLastAccessTime(string sessionId, DateTime time)
+        {
+            string filePath = GetSessionFilePath(sessionId);
+
+            object lockObject = UserLock.XInstance.GetLock(sessionId);
+
+            lock( lockObject ) {
+                File.SetLastAccessTime(filePath, time);
+            }
+        }
 
 
 

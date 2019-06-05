@@ -43,8 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheStore.cs" />
+    <Compile Include="Debug\DebugInfoHelper.cs" />
+    <Compile Include="Debug\SessionDetailHandler.cs" />
     <Compile Include="Debug\ShowDebugHandler.cs" />
     <Compile Include="DEMO\UserLockDemo.cs" />
+    <Compile Include="SessionDataUtils.cs" />
     <Compile Include="UserLock.cs" />
     <Compile Include="WinLogger.cs" />
     <Compile Include="FastSessionStateStore.cs" />

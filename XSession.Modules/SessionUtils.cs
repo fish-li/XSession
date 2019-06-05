@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -11,7 +10,7 @@ namespace XSession.Modules
 {
     internal static class SessionUtils
     {
-        internal static SessionStateStoreData CreateLegitStoreData(HttpContext context, ISessionStateItemCollection sessionItems, HttpStaticObjectsCollection staticObjects, int timeout)
+        public static SessionStateStoreData CreateLegitStoreData(HttpContext context, ISessionStateItemCollection sessionItems, HttpStaticObjectsCollection staticObjects, int timeout)
         {
             if( sessionItems == null ) {
                 sessionItems = new SessionStateItemCollection();
@@ -23,7 +22,7 @@ namespace XSession.Modules
         }
 
 
-        internal static byte[] SerializeStoreData(SessionStateStoreData item, int initialStreamSize)
+        public static byte[] SerializeStoreData(SessionStateStoreData item, int initialStreamSize)
         {
             using( MemoryStream memoryStream = new MemoryStream(initialStreamSize) ) {
                 Serialize(item, memoryStream);
@@ -31,7 +30,7 @@ namespace XSession.Modules
             }
         }
 
-        internal static void Serialize(SessionStateStoreData item, Stream stream)
+        public static void Serialize(SessionStateStoreData item, Stream stream)
         {
             bool flag = true;
             bool flag2 = true;
@@ -59,13 +58,13 @@ namespace XSession.Modules
         }
 
 
-        internal static SessionStateStoreData DeserializeStoreData(HttpContext context, Stream stream)
+        public static SessionStateStoreData DeserializeStoreData(HttpContext context, Stream stream)
         {
             return Deserialize(context, stream);
         }
 
 
-        internal static SessionStateStoreData Deserialize(HttpContext context, Stream stream)
+        public static SessionStateStoreData Deserialize(HttpContext context, Stream stream)
         {
             int timeout;
             SessionStateItemCollection sessionItems;
@@ -84,7 +83,7 @@ namespace XSession.Modules
 
             return new SessionStateStoreData(sessionItems, staticObjects, timeout);
         }
-
+        
 
     }
 }

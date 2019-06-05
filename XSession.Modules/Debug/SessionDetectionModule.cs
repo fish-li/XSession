@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Web;
@@ -14,9 +15,6 @@ namespace XSession.Modules.Debug
     {
         private static readonly string ItemKey = "DebugInfo#4020dac915674b6bbb7550ab29fb3bdc";
 
-        private static readonly object s_lock = new object();
-        internal static Hashtable SessionDataTypes = new Hashtable(256);
-
 
         public void Init(HttpApplication app)
         {
@@ -26,7 +24,7 @@ namespace XSession.Modules.Debug
 
 
             // 生产环境不工作，避免影响性能
-            if( Initializer.IsProdEnvironment == false ) {                
+            if( Initializer.IsProdEnvironment == false ) {
                 app.PostRequestHandlerExecute += App_PostRequestHandlerExecute;
                 app.UpdateRequestCache += App_UpdateRequestCache;
             }
@@ -49,6 +47,9 @@ namespace XSession.Modules.Debug
             }
             else if( app.Request.Path.Equals("/XSession/ShowDebug.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new ShowDebugHandler();
+            }
+            else if( app.Request.Path.Equals("/XSession/Detail.aspx", StringComparison.OrdinalIgnoreCase) ) {
+                handler = new SessionDetailHandler();
             }
 
             if( handler != null ) {
@@ -77,7 +78,8 @@ namespace XSession.Modules.Debug
             bool dirty = (bool)property2.GetValue(sessionItems, null);
 
 
-            CreateDebugInfo(app);
+            DebugInfo debugInfo = DebugInfoHelper.CreateDebugInfo(app.Context);
+            app.Context.Items[ItemKey] = debugInfo;
 
 
             if( dirty == false ) {
@@ -87,91 +89,17 @@ namespace XSession.Modules.Debug
         }
 
 
-        private void CreateDebugInfo(HttpApplication app)
-        {
-            var session = app.Context.Session;
-
-            string[] names = session.Keys.Cast<string>().OrderBy(x => x).ToArray();
-            List<string> items = new List<string>();
-
-            foreach( string x in names ) {
-
-                object value = session[x];
-                if( value == null ) {
-                    items.Add($"{x} = NULL");
-                    continue;
-                }
-
-                Type dataType = value.GetType();
-
-                if( dataType == typeof(string) ) {
-                    string text = (string)value;
-                    string display = (text.Length <= 100 ? text : text.Substring(0, 100) + "...").Replace("\r", "\\r").Replace("\n", "\\n");
-                    items.Add($"{x} = {display} , ({text.Length})");
-                    continue;
-                }
-
-                // 记录包含了哪些数据类型
-                if( SessionDataTypes.ContainsKey(dataType) == false ) {
-                    lock( s_lock ) {
-                        SessionDataTypes[dataType] = "xx";
-                    }
-                }
-
-                if( dataType.IsPrimitive || dataType == typeof(DateTime) || dataType == typeof(Guid) ) {
-                    items.Add($"{x} = {value.ToString()},  ({dataType.ToString()})");
-                    continue;
-                }
-
-                if( dataType == typeof(byte[]) ) {
-                    items.Add($"{x} = {dataType.ToString()}, length: {((byte[])value).Length}");
-                    continue;
-                }
-
-                if( value is ICollection ) {
-                    ICollection collection = value as ICollection;
-                    items.Add($"{x} = {dataType.ToString()}, count: {collection.Count}");
-                    continue;
-                }
-
-                if( value is DataTable ) {
-                    DataTable table = value as DataTable;
-                    items.Add($"{x} = {dataType.ToString()}, rows: {table.Rows.Count}, cols: {table.Columns.Count}");
-                    continue;
-                }
-
-                items.Add($"{x} = {dataType.ToString()}");
-            }
-
-            DebugInfo debugInfo = new DebugInfo {
-                Time = DateTime.Now,
-                Url = app.Request.Path,
-                SessionId = session.SessionID,
-                Items = items
-            };
-
-            app.Context.Items[ItemKey] = debugInfo;
-
-        }
-
+       
         private void App_UpdateRequestCache(object sender, EventArgs e)
         {
             HttpApplication app = (HttpApplication)sender;
 
             DebugInfo debugInfo = app.Context.Items[ItemKey] as DebugInfo;
+
             if( debugInfo == null )
                 return;
 
-            
-            string filePath = FileStore.GetSessionFilePath(debugInfo.SessionId);
-
-            if( File.Exists(filePath) ) {
-                FileInfo file = new FileInfo(filePath);
-                debugInfo.Size = file.Length;
-            }
-            else {
-                debugInfo.Size =  -1 ;
-            }
+            DebugInfoHelper.SetSize(debugInfo);
             
             DataQueue.Add(debugInfo);
         }

@@ -18,8 +18,7 @@ namespace XSession.Modules.Debug
                 context.Response.Write("当前站点为生产环境，没有调试记录。");
                 return;
             }
-
-
+            
             
             StringBuilder s = new StringBuilder();
 
