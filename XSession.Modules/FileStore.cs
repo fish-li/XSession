@@ -49,7 +49,7 @@ namespace XSession.Modules
                     DateTime now = DateTime.Now;
 
                     if( checkTimeout ) {
-                        // 从文件加载时，检查数据是否已过期                        
+                        // 从文件加载时，检查数据是否已过期
                         DateTime time = File.GetLastAccessTime(filePath);
 
                         // Session数据已过期
@@ -58,7 +58,10 @@ namespace XSession.Modules
                     }
                     
                     byte[] bytes = RetryFile.Read(filePath);
-                    File.SetLastAccessTime(filePath, now);
+
+                    if( checkTimeout ) {
+                        File.SetLastAccessTime(filePath, now);
+                    }
 
                     return bytes;
                 }
