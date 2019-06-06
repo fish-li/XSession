@@ -41,6 +41,9 @@ namespace XSession.Modules.Debug
             else if( app.Request.Path.Equals("/XSession/FileList.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new FileListHandler();
             }
+            else if( app.Request.Path.Equals("/XSession/CacheList.aspx", StringComparison.OrdinalIgnoreCase) ) {
+                handler = new CacheListHandler();
+            }
             else if( app.Request.Path.Equals("/XSession/Delete.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new SessionDeleteHandler();
             }

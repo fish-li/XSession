@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheStore.cs" />
+    <Compile Include="Debug\CacheListHandler.cs" />
     <Compile Include="Debug\DebugInfoHelper.cs" />
     <Compile Include="Debug\SessionDetailHandler.cs" />
     <Compile Include="Debug\DebugPageHandler.cs" />

@@ -10,13 +10,13 @@ namespace XSession.Modules.Debug
 {
     internal sealed class DebugPageHandler : IHttpHandler
     {
-        private static string s_template;
+        internal static string TemplateHtml { get; private set; }
 
         static DebugPageHandler()
         {
             using( Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Debug.DebugPageTemplate.html") ) {
                 using( StreamReader reader = new StreamReader(stream, Encoding.UTF8) ) {
-                    s_template = reader.ReadToEnd();
+                    TemplateHtml = reader.ReadToEnd();
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace XSession.Modules.Debug
 
             s.AppendLine("</pre>");
 
-            string html = s_template.Replace("<!--{pagebody}-->", s.ToString());
+            string html = TemplateHtml.Replace("<!--{pagebody}-->", s.ToString());
             context.Response.Write(html);
         }
     }
