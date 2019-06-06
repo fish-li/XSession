@@ -21,6 +21,7 @@ Session对性能有较大影响的就是前二类场景。
  - Session加载耗时：采用内存优先的读取方式，加载耗时几乎为零。
  - Session保存耗时：采用本地文件存储，避免远程调用和网络传输，并保证稳定可靠。
 
+[参考链接](https://www.processon.com/view/link/5cebac9ae4b0672b26741f38)
 <p><br /><br /></p>
 
 ### Session 的使用建议
