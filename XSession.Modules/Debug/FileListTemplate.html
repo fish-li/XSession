@@ -13,7 +13,8 @@
             color: #808080;
         }
         body{
-            padding: 0 10px 10px 10px;
+            padding: 0;
+            margin: 0;
         }
         a{
             text-decoration:none;
@@ -22,8 +23,7 @@
             color: blue;
         }
         table{
-            width: 95%;
-            border-collapse: collapse;
+             border-collapse: collapse;
             border: none;
         }
         tr{
@@ -31,9 +31,10 @@
         }
         thead tr {
             border-top: dotted 1px #808080;
-            background-color: SkyBlue;
+            background-color: lightseagreen;
         }
         thead tr td{
+            padding: 8px 5px;
             font-weight: bold;
             color: #fff;
         }
@@ -46,29 +47,10 @@
         td.right{
             text-align: right;
         }
-        p.navigation{
-            font-weight: bold;
-            padding: 5px 2px;
-        }
-        p.navigation i, p.navigation span, p.navigation a {
-            display: block;
-            float: left;
-            padding: 3px 5px;
-        }
-        p.navigation a {
-            color: blue;
-        }
-        p.navigation a:hover{
-            background-color: deepskyblue;
-            color: white;
-        }
     </style>
 </head>
 <body>
-    <p class="navigation">Session Path： <!--{current-path}--></p>
-    <div style="clear: both;"></div>
-
-    <table style="width: 95%;">
+    <table style="width: 100%;">
         <thead>
             <tr>
                 <td style="width: 35px;">#</td>

@@ -13,9 +13,10 @@ namespace XSession.Modules.Debug
 
         static FileListHandler()
         {
-            Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Debug.FileListTemplate.html");
-            using( StreamReader reader = new StreamReader(stream, Encoding.UTF8) ) {
-                s_template = reader.ReadToEnd();
+            using( Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Debug.FileListTemplate.html") ) {
+                using( StreamReader reader = new StreamReader(stream, Encoding.UTF8) ) {
+                    s_template = reader.ReadToEnd();
+                }
             }
         }
 
@@ -51,9 +52,7 @@ namespace XSession.Modules.Debug
                 html.AppendLine(line);
             }
 
-            string result = s_template
-                        .Replace("<!--{current-path}-->", Initializer.TempPath)
-                        .Replace("<!--{data-row}-->", html.ToString());
+            string result = s_template.Replace("<!--{data-row}-->", html.ToString());
 
             context.Response.Write(result);
         }

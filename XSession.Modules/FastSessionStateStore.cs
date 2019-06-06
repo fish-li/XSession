@@ -59,7 +59,13 @@ namespace XSession.Modules
             SessionStateStoreData data = null;
 
             // 优先从缓存中读取Session数据
-            if( Initializer.Is64Bit ) {                
+            if( Initializer.Is64Bit ) {
+
+                // TODO: 这里可能会有一个缺陷！
+                // 假设场景：一个用户有多个并发的请求在服务端同时执行，此时获取到的是同一个Session引用对象，可能会有并发读写问题！
+                // 要解决这个问题，需要做对象的克隆，会浪费一些性能，
+                // 然则考虑到现实情况，人工点击的操作频率，是不大可能出现线程并发问题的，所以这里暂且不处理。
+
                 data = _cacheStore.DoGet(context, id);
                 if( data != null ) {
 
@@ -76,7 +82,7 @@ namespace XSession.Modules
             data = _fileStore.DoGet(context, id, true);
 
             if( data != null ) 
-                _cacheStore.InsertCache(id, data);
+                _cacheStore.InsertCacheById(id, data);
             
             return data;
         }
@@ -130,7 +136,7 @@ namespace XSession.Modules
 
 
                 if( this._expireCallback != null ) {
-                    InProcSessionState state = (InProcSessionState)value;
+                    SessionStateStoreData state = (SessionStateStoreData)value;
                     this._expireCallback(id, SessionUtils.CreateLegitStoreData(null, state.Items, state.StaticObjects, state.Timeout));
                 }
             }
@@ -158,6 +164,9 @@ namespace XSession.Modules
             // 先更新缓存数据，尽量让并发的请求拿到最新的数据
             if( Initializer.Is64Bit ) {
                 _cacheStore.SetAndReleaseItemExclusive(id, item);
+
+                // 及时清除修改标记
+                item.Items.Dirty = false;
             }
 
             // 再更新文件

@@ -94,7 +94,12 @@ namespace XSession.Modules
             object lockObject = UserLock.XInstance.GetLock(sessionId);
 
             lock( lockObject ) {
-                File.SetLastAccessTime(filePath, time);
+                try {
+                    File.SetLastAccessTime(filePath, time);
+                }
+                catch( FileNotFoundException ) {
+                    // 忽略异常
+                }
             }
         }
 

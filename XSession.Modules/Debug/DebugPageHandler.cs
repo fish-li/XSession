@@ -1,25 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
 
 namespace XSession.Modules.Debug
 {
-    internal sealed class ShowDebugHandler : IHttpHandler
+    internal sealed class DebugPageHandler : IHttpHandler
     {
+        private static string s_template;
+
+        static DebugPageHandler()
+        {
+            using( Stream stream = typeof(FileListHandler).Assembly.GetManifestResourceStream("XSession.Modules.Debug.DebugPageTemplate.html") ) {
+                using( StreamReader reader = new StreamReader(stream, Encoding.UTF8) ) {
+                    s_template = reader.ReadToEnd();
+                }
+            }
+        }
+
         public bool IsReusable => false;
 
         public void ProcessRequest(HttpContext context)
         {
-            context.Response.ContentType = "text/plain";
+            context.Response.ContentType = "text/html";
 
-            string dllPath = typeof(ShowDebugHandler).Assembly.Location;
+            string dllPath = typeof(DebugPageHandler).Assembly.Location;
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(dllPath);
 
 
             StringBuilder s = new StringBuilder();
+            s.AppendLine("<pre>");
 
             s.AppendLine($"Version: {versionInfo.FileVersion}");
             s.AppendLine("------------------------------------------------------");
@@ -44,7 +57,10 @@ namespace XSession.Modules.Debug
             foreach(var key in SessionDataUtils.SessionDataTypes.Keys)
                 s.AppendLine("  " + key.ToString());
 
-            context.Response.Write(s.ToString());
+            s.AppendLine("</pre>");
+
+            string html = s_template.Replace("<!--{pagebody}-->", s.ToString());
+            context.Response.Write(html);
         }
     }
 }

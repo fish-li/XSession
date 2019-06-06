@@ -22,7 +22,6 @@ namespace XSession.Modules.Debug
 
             app.BeginRequest += App_BeginRequest;
 
-
             // 生产环境不工作，避免影响性能
             if( Initializer.IsProdEnvironment == false ) {
                 app.PostRequestHandlerExecute += App_PostRequestHandlerExecute;
@@ -46,7 +45,7 @@ namespace XSession.Modules.Debug
                 handler = new SessionDeleteHandler();
             }
             else if( app.Request.Path.Equals("/XSession/ShowDebug.aspx", StringComparison.OrdinalIgnoreCase) ) {
-                handler = new ShowDebugHandler();
+                handler = new DebugPageHandler();
             }
             else if( app.Request.Path.Equals("/XSession/Detail.aspx", StringComparison.OrdinalIgnoreCase) ) {
                 handler = new SessionDetailHandler();
@@ -68,14 +67,15 @@ namespace XSession.Modules.Debug
 
             var session = app.Context.Session;
 
-            PropertyInfo property = session.GetType().GetProperty("Container", BindingFlags.Instance | BindingFlags.NonPublic);
-            object stateContainer = property.GetValue(session, null);
+            // 枚举Session数据时，可能会造成数据被标记为【已修改】，所以要先把标记拿到，枚举结束后恢复。
+            PropertyInfo containerProperty = session.GetType().GetProperty("Container", BindingFlags.Instance | BindingFlags.NonPublic);
+            object stateContainer = containerProperty.GetValue(session, null);
 
-            FieldInfo field = stateContainer.GetType().GetField("_sessionItems", BindingFlags.Instance | BindingFlags.NonPublic);
-            object sessionItems = field.GetValue(stateContainer);
+            FieldInfo sessionItemsField = stateContainer.GetType().GetField("_sessionItems", BindingFlags.Instance | BindingFlags.NonPublic);
+            object sessionItems = sessionItemsField.GetValue(stateContainer);
 
-            PropertyInfo property2 = sessionItems.GetType().GetProperty("Dirty", BindingFlags.Instance | BindingFlags.NonPublic| BindingFlags.Public);
-            bool dirty = (bool)property2.GetValue(sessionItems, null);
+            PropertyInfo dirtyProperty = sessionItems.GetType().GetProperty("Dirty", BindingFlags.Instance | BindingFlags.NonPublic| BindingFlags.Public);
+            bool dirty = (bool)dirtyProperty.GetValue(sessionItems, null);
 
 
             DebugInfo debugInfo = DebugInfoHelper.CreateDebugInfo(app.Context);
@@ -84,7 +84,7 @@ namespace XSession.Modules.Debug
 
             if( dirty == false ) {
                 // 还原状态，避免Session重新写入
-                property2.SetValue(sessionItems, false, null);
+                dirtyProperty.SetValue(sessionItems, false, null);
             }
         }
 

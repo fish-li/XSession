@@ -11,7 +11,7 @@ namespace WebApplication1
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.Page.Title = "Page1" + Session["usecode"];
+            this.Page.Title = "Page2" + Session["usecode"];
         }
     }
 }

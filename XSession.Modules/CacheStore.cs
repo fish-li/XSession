@@ -19,35 +19,30 @@ namespace XSession.Modules
             return KeyPrefix + sessionId;
         }
 
-        private void InsertCache(string key, InProcSessionState state)
+        private void InsertCacheByKey(string key, SessionStateStoreData state)
         {
             HttpRuntime.Cache.Insert(key, state, null, Cache.NoAbsoluteExpiration, new TimeSpan(0, state.Timeout, 30), CacheItemPriority.NotRemovable, this._callback);
         }
 
-        public void InsertCache(string id, SessionStateStoreData data)
+        public void InsertCacheById(string id, SessionStateStoreData data)
         {
-            InProcSessionState state = new InProcSessionState(data);
             string key = this.GetSessionStateCacheKey(id);
-            InsertCache(key, state);
+            InsertCacheByKey(key, data);
         }
 
         public void CreateUninitializedItem(string id, int timeout, SessionStateStoreData data)
         {
             string key = this.GetSessionStateCacheKey(id);
-            InProcSessionState state = new InProcSessionState(data);
-            InsertCache(key, state);
+            InsertCacheByKey(key, data);
         }
 
 
         public SessionStateStoreData DoGet(HttpContext context, string id)
         {
             string key = this.GetSessionStateCacheKey(id);
-            InProcSessionState state = HttpRuntime.Cache.Get(key) as InProcSessionState;
+            SessionStateStoreData state = HttpRuntime.Cache.Get(key) as SessionStateStoreData;
 
-            if( state != null )
-                return state.ToStoreData(context);
-            else
-                return null;
+            return state;
         }
 
 
@@ -66,18 +61,13 @@ namespace XSession.Modules
         public void SetAndReleaseItemExclusive(string id, SessionStateStoreData item)
         {
             string key = this.GetSessionStateCacheKey(id);
-            InProcSessionState state = HttpRuntime.Cache.Get(key) as InProcSessionState;
+            SessionStateStoreData state = HttpRuntime.Cache.Get(key) as SessionStateStoreData;
 
             if( state == null ) {
-                state = new InProcSessionState(item);
-                InsertCache(key, state);
+                InsertCacheByKey(key, item);
             }
-            else {
-                // 如果缓存中的对象存在，就只做更新
-                state.Items = item.Items;
-                state.StaticObjects = item.StaticObjects;
-                state.Timeout = item.Timeout;
-            }
+
+            // 说明：并不需要【更新缓存对象】，因为引用的对象一直没有改变过！
         }
 
 

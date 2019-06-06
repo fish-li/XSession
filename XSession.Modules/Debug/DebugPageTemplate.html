@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Session诊断信息页</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            font-family: Consolas, 'Courier New', '微软雅黑', '宋体';
+            font-size: 14px;
+            color: #111111;
+        }
+        body{
+            padding: 0;
+            margin: 0;
+        }
+        a{
+            text-decoration:none;
+        }
+        a:hover{
+            color: blue;
+        }
+        pre{
+            padding-left: 10px;
+            line-height: 150%;
+        }
+
+        p.navigation{
+            font-weight: bold;
+            padding: 10px;
+            background-color: lightseagreen;
+            margin-bottom: 20px;
+        }
+        p.navigation a {
+            color: #fff;
+        }
+        p.navigation a:hover{
+            background-color: forestgreen;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <p class="navigation">
+        <a href="/XSession/SessionList.aspx" target="_blank">SessionList</a> &nbsp; &nbsp;
+        <a href="/XSession/FileList.aspx" target="_blank">FileList</a> &nbsp; &nbsp;
+        <a href="/XSession/ShowDebug.aspx">Refresh</a>
+    </p>
+
+    <!--{pagebody}-->
+
+</body>
+</html>

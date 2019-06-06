@@ -45,7 +45,7 @@
     <Compile Include="CacheStore.cs" />
     <Compile Include="Debug\DebugInfoHelper.cs" />
     <Compile Include="Debug\SessionDetailHandler.cs" />
-    <Compile Include="Debug\ShowDebugHandler.cs" />
+    <Compile Include="Debug\DebugPageHandler.cs" />
     <Compile Include="DEMO\UserLockDemo.cs" />
     <Compile Include="SessionDataUtils.cs" />
     <Compile Include="UserLock.cs" />
@@ -56,7 +56,6 @@
     <Compile Include="FileSessionStateStore.cs" />
     <Compile Include="HashHelper.cs" />
     <Compile Include="Initializer.cs" />
-    <Compile Include="InProcSessionState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RetryFile.cs" />
     <Compile Include="Debug\DataQueue.cs" />
@@ -69,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Debug\FileListTemplate.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Debug\DebugPageTemplate.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
