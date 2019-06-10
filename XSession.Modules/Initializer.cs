@@ -59,7 +59,7 @@ namespace XSession.Modules
         private static string InitTempRoot()
         {
             // 顶层根目录
-            string tempPath = System.Configuration.ConfigurationManager.AppSettings["FileSessionStateStore.TempPath"];
+            string tempPath = System.Configuration.ConfigurationManager.AppSettings["XSession.FileSessionStateStore.TempPath"];
             if( string.IsNullOrEmpty(tempPath) )
                 tempPath = Path.GetTempPath();
 
