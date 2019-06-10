@@ -67,19 +67,18 @@ FileSessionStateStore特点：
 
 ```
 <system.web>
-
     <sessionState mode="Custom" customProvider="FastSessionStateStore" cookieless="false" timeout="30" >
         <providers>
-            <add name="FileSessionStateStore" type="XSession.Modules.FileSessionStateStore, XSession.Modules"/>
             <add name="FastSessionStateStore" type="XSession.Modules.FastSessionStateStore, XSession.Modules"/>
         </providers>
     </sessionState>
-
-    <httpModules>
-        <add name="SessionDetectionModule" type="XSession.Modules.Debug.SessionDetectionModule, XSession.Modules"/>
-    </httpModules>
-
 </system.web>
+
+<system.webServer>
+    <modules>
+        <add name="SessionMonitorModule" type="XSession.Modules.Debug.SessionMonitorModule, XSession.Modules" preCondition="integratedMode"/>
+    </modules>
+</system.webServer>
 ```
 使用建议：
  - 可直接使用 FastSessionStateStore

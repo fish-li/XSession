@@ -64,7 +64,7 @@
     <Compile Include="Debug\FileListHandler.cs" />
     <Compile Include="Debug\SessionDeleteHandler.cs" />
     <Compile Include="Debug\SessionListHandler.cs" />
-    <Compile Include="Debug\SessionDetectionModule.cs" />
+    <Compile Include="Debug\SessionMonitorModule.cs" />
     <Compile Include="SessionUtils.cs" />
   </ItemGroup>
   <ItemGroup>

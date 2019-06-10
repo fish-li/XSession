@@ -13,12 +13,6 @@ namespace XSession.Modules.Debug
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
-
-            if( Initializer.IsProdEnvironment ) {
-                context.Response.Write("当前站点为生产环境，没有调试记录。");
-                return;
-            }
-            
             
             StringBuilder s = new StringBuilder();
 

@@ -11,19 +11,32 @@ using System.Web;
 
 namespace XSession.Modules.Debug
 {
-    public sealed class SessionDetectionModule : IHttpModule
+    public sealed class SessionMonitorModule : IHttpModule
     {
         private static readonly string ItemKey = "DebugInfo#4020dac915674b6bbb7550ab29fb3bdc";
+        internal static readonly bool EnableSessionMonitor;
 
+        static SessionMonitorModule()
+        {
+            // 增加一个参数，用于紧急情况下，线上查看生产环境数据
+            bool flag = System.Configuration.ConfigurationManager.AppSettings["XSession.SessionMonitorModule.Enabled"] == "1";
+
+            // 默认启用条件：【非生产环境】，或者特殊情况下临时开启。
+            EnableSessionMonitor = (Initializer.IsProdEnvironment == false) || flag;
+
+            // 说明
+            // 理论上这样的判断有些多余，如果希望生产环境不启用当前Module，可以不配置它，
+            // 然而实际情况下，我们的同事在实际部署时，几乎都是会从测试环境中复制配置文件，不能指望他们去调整这些配置，
+            // 所以，为了避免影响产生环境的性能，Module内部根据软件狗的类型来做环境判断，生产环境就默认不工作。
+        }
 
         public void Init(HttpApplication app)
         {
             Initializer.Init();
+   
+            if( EnableSessionMonitor ) {
+                app.BeginRequest += App_BeginRequest;
 
-            app.BeginRequest += App_BeginRequest;
-
-            // 生产环境不工作，避免影响性能
-            if( Initializer.IsProdEnvironment == false ) {
                 app.PostRequestHandlerExecute += App_PostRequestHandlerExecute;
                 app.UpdateRequestCache += App_UpdateRequestCache;
             }
