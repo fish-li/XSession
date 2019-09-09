@@ -29,7 +29,7 @@ namespace XSession.Modules
 
             string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = UserLock.XInstance.GetLock(sessionId);
+            object lockObject = SidLock.Instance.GetLock(sessionId);
 
             lock( lockObject ) {
                 RetryFile.Write(filePath, bytes);
@@ -42,7 +42,7 @@ namespace XSession.Modules
         {
             string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = UserLock.XInstance.GetLock(sessionId);
+            object lockObject = SidLock.Instance.GetLock(sessionId);
 
             lock( lockObject ) {
                 if( File.Exists(filePath) ) {
@@ -74,7 +74,7 @@ namespace XSession.Modules
         {
             string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = UserLock.XInstance.GetLock(sessionId);
+            object lockObject = SidLock.Instance.GetLock(sessionId);
 
             lock( lockObject ) {
                 if( File.Exists(filePath) ) {
@@ -82,7 +82,7 @@ namespace XSession.Modules
                 }
             }
             
-            UserLock.XInstance.RemoveLock(sessionId);
+            SidLock.Instance.RemoveLock(sessionId);
         }
 
 
@@ -91,7 +91,7 @@ namespace XSession.Modules
         {
             string filePath = GetSessionFilePath(sessionId);
 
-            object lockObject = UserLock.XInstance.GetLock(sessionId);
+            object lockObject = SidLock.Instance.GetLock(sessionId);
 
             lock( lockObject ) {
                 try {

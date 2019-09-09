@@ -15,6 +15,9 @@ namespace XSession.Modules
     /// 1、为了防止Session数据丢失，会将Session数据写入文件（参考PHP之类的做法）
     /// 2、为了提升Session数据的加载性能，Session数据在写入文件时，同时存放一份在Cache中，加载时优先从Cache中获取
     /// 3、为了避免32位内存不够用时导致OOM，Cache功能仅当64位时有效
+    /// 
+    /// 注意：
+    /// 这个版本当遇到 ReportViewer 控件时，会在Session保存时遇到阻塞，所以不建议使用！
     /// </summary>
     public sealed partial class FastSessionStateStore : SessionStateStoreProviderBase
     {

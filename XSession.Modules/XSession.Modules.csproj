@@ -49,7 +49,7 @@
     <Compile Include="Debug\DebugPageHandler.cs" />
     <Compile Include="DEMO\UserLockDemo.cs" />
     <Compile Include="SessionDataUtils.cs" />
-    <Compile Include="UserLock.cs" />
+    <Compile Include="SidLock.cs" />
     <Compile Include="WinLogger.cs" />
     <Compile Include="FastSessionStateStore.cs" />
     <Compile Include="FileCleanTask.cs" />

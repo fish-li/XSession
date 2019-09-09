@@ -50,7 +50,7 @@ namespace XSession.Modules
 
                     // 删除内存中的用户锁对象，以免内存泄露
                     string sessionId = FileStore.GetSessionId(filePath);
-                    UserLock.XInstance.RemoveLock(sessionId);
+                    SidLock.Instance.RemoveLock(sessionId);
                 }
             }
 

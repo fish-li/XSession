@@ -9,21 +9,18 @@ namespace XSession.Modules
     /// <summary>
     /// 实现一个简单的用户关联锁。
     /// </summary>
-    public sealed class UserLock
+    internal sealed class SidLock
     {
         private readonly object _lock = new object();
         private Hashtable _hashtable = new Hashtable(10240);
 
-
-        public static readonly UserLock Instance = new UserLock();
-
         /// <summary>
         /// 供内部使用的实例
         /// </summary>
-        internal static readonly UserLock XInstance = new UserLock();
+        internal static readonly SidLock Instance = new SidLock();
 
 
-        private UserLock() { }
+        private SidLock() { }
 
 
         /// <summary>
