@@ -1,7 +1,7 @@
 ﻿
 ### XSession 是什么
 
-CXSession 是一个解决现有老项目中Session性能问题的类库。
+XSession 是一个解决现有老项目中Session性能问题的类库。
 
 <p><br /><br /></p>
 
